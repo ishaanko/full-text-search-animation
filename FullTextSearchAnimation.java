@@ -23,7 +23,7 @@ public class FullTextSearchAnimation extends JPanel {
     
     private final Map<String, Set<Integer>> invertedIndex = new HashMap<>();
     private String query = "";
-    private final JTextField searchField = new JTextField(15);
+    private final JTextField searchField = new JTextField(15);  
     private final JButton buildButton = new JButton("Build Index");
     private final JButton clearButton = new JButton("Clear");
     private boolean indexBuilt = false;
@@ -38,7 +38,7 @@ public class FullTextSearchAnimation extends JPanel {
     private final java.util.List<String> animationSteps = new ArrayList<>();
     private int currentStep = 0;
     private long stepStartTime = 0;
-    private final int STEP_DURATION = 800;
+    private final int STEP_DURATION = 500;
     
     // colors
     private final Color PRIMARY_COLOR = new Color(51, 122, 183);
@@ -475,12 +475,12 @@ public class FullTextSearchAnimation extends JPanel {
     }
     
     private void drawInvertedIndex(Graphics2D g) {
-        g.setFont(new Font("SansSerif", Font.BOLD, 22));
+        g.setFont(new Font("SansSerif", Font.BOLD, 26));
         g.setColor(Color.BLACK);
         g.drawString("Inverted Index:", 700, 120);
         
         if (!indexBuilt && !isBuilding) {
-            g.setFont(new Font("SansSerif", Font.ITALIC, 16));
+            g.setFont(new Font("SansSerif", Font.ITALIC, 18));
             g.setColor(Color.GRAY);
             g.drawString("Index will appear here during building...", 720, 155);
             return;
@@ -491,9 +491,9 @@ public class FullTextSearchAnimation extends JPanel {
         sortedEntries.sort(Map.Entry.comparingByKey());
         
         int y = 155;
-        int maxEntries = 20; // don't show too many or they won't fit
+        int maxEntries = 18; // slightly fewer to accommodate larger text
         int entriesShown = 0;
-        g.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        g.setFont(new Font("Monospaced", Font.PLAIN, 16));
         
         for (Map.Entry<String, Set<Integer>> entry : sortedEntries) {
             if (entriesShown >= maxEntries) break;
@@ -511,35 +511,35 @@ public class FullTextSearchAnimation extends JPanel {
                 float pulse = (float) (0.5 + 0.5 * Math.sin(time * 0.02));
                 Color tokenColor = new Color(255, 193, 7, (int)(80 + 70 * pulse));
                 g.setColor(tokenColor);
-                g.fillRect(700, y - 16, 350, 20);
+                g.fillRect(700, y - 18, 400, 24);
                 g.setColor(new Color(255, 87, 34));
                 g.setFont(g.getFont().deriveFont(Font.BOLD));
             } else if (isQueryToken) {
                 g.setColor(new Color(255, 193, 7, 120));
-                g.fillRect(700, y - 16, 350, 20);
+                g.fillRect(700, y - 18, 400, 24);
                 g.setColor(PRIMARY_COLOR);
                 g.setFont(g.getFont().deriveFont(Font.BOLD));
             } else {
                 g.setColor(Color.BLACK);
-                g.setFont(new Font("Monospaced", Font.PLAIN, 14));
+                g.setFont(new Font("Monospaced", Font.PLAIN, 16));
             }
             
             String indexEntry = String.format("%-15s → %s", word, docIds.toString());
             g.drawString(indexEntry, 720, y);
-            y += 22;
+            y += 26;
             entriesShown++;
         }
         
         // show if there are more terms
         if (sortedEntries.size() > maxEntries) {
-            g.setFont(new Font("SansSerif", Font.ITALIC, 14));
+            g.setFont(new Font("SansSerif", Font.ITALIC, 16));
             g.setColor(Color.GRAY);
             g.drawString("... and " + (sortedEntries.size() - maxEntries) + " more terms", 720, y + 15);
         }
         
         // progress bar
         if (isBuilding) {
-            g.setFont(new Font("SansSerif", Font.BOLD, 16));
+            g.setFont(new Font("SansSerif", Font.BOLD, 18));
             g.setColor(new Color(255, 152, 0));
             int progress = (int) ((double) currentStep / animationSteps.size() * 100);
             g.drawString("Building progress: " + progress + "%", 700, y + 40);
